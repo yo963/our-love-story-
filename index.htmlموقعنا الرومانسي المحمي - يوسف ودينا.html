@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالمنا الخاص ❤️ - يوسف & دينا</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Canvas Confetti & SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #160209 0%, #2b081c 50%, #100007 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-amiri {
+            font-family: 'Amiri', serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(244, 114, 182, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-pink {
+            background: rgba(225, 29, 72, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(251, 113, 133, 0.35);
+        }
+
+        .glow-pink {
+            text-shadow: 0 0 18px rgba(244, 63, 94, 0.8);
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #f43f5e, #fb7185, #fde047);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #hearts-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(244, 63, 94, 0.55);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0.3) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.85; }
+            80% { opacity: 0.85; }
+            100% { transform: translateY(-10vh) scale(1.1) rotate(360deg); opacity: 0; }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #120008; }
+        ::-webkit-scrollbar-thumb { background: #e11d48; border-radius: 4px; }
+    </style>
+</head>
+<body class="relative selection:bg-rose-600 selection:text-white">
+
+    <div id="hearts-bg"></div>
+
+    <!-- LOCK SCREEN OVERLAY -->
+    <div id="lock-screen" class="fixed inset-0 z-50 bg-gradient-to-br from-rose-950 via-pink-950 to-black flex items-center justify-center p-4 transition-all duration-700">
+        <div id="lock-card" class="glass-card max-w-md w-full rounded-3xl p-8 border border-rose-500/40 text-center space-y-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-rose-600/20 rounded-full blur-2xl"></div>
+            
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-rose-600 to-pink-500 text-white shadow-lg shadow-rose-600/40 animate-pulse">
+                <i id="lock-icon" class="fa-solid fa-lock text-3xl"></i>
+            </div>
+
+            <div class="space-y-2">
+                <h2 class="text-3xl font-amiri font-bold text-rose-100">عالم يوسف & دينا ❤️</h2>
+                <p class="text-sm text-rose-300/90 font-medium">أدخل كلمة السر لفتح الموقع وتشغيل الأغنية</p>
+            </div>
+
+            <form onsubmit="handleUnlock(event)" class="space-y-4">
+                <div class="relative">
+                    <input type="password" id="passcode-input" placeholder="كلمة السر..." class="w-full bg-rose-950/80 border border-rose-500/50 rounded-2xl py-3.5 px-4 text-center text-lg font-sans tracking-wide text-white placeholder-rose-400/40 focus:outline-none focus:ring-2 focus:ring-rose-400">
+                    <button type="button" onclick="togglePassVisibility()" class="absolute left-4 top-1/2 -translate-y-1/2 text-rose-400/70 hover:text-rose-200">
+                        <i id="pass-eye-icon" class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+
+                <p id="lock-error-msg" class="text-xs text-rose-400 hidden flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>كلمة السر غير صحيحة! كلمة السر هي: love you dina</span>
+                </p>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-bold rounded-2xl shadow-lg shadow-rose-900/50 transition duration-300 flex items-center justify-center gap-2">
+                    <span>افتح عالم الحب والأغنية 🎵</span>
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+            </form>
+
+            <p class="text-xs text-rose-300/60 italic">💡 كلمة السر هي: <span class="font-bold text-rose-200">love you dina</span></p>
+        </div>
+    </div>
+
+    <!-- AUDIO PLAYER -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://ia601608.us.archive.org/11/items/tamer-ashour-kheliny-fe-hodnak/Tamer%20Ashour%20-%20Kheliny%20Fe%20Hodnak.mp3" type="audio/mpeg">
+    </audio>
+
+    <header class="relative z-10 w-full px-6 py-4 flex flex-wrap justify-between items-center glass-card border-b border-rose-900/40 gap-4">
+        <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="handleTitleClick()" title="اضغط 5 مرات لإظهار خيارات التعديل">
+            <i class="fa-solid fa-heart text-rose-500 text-3xl animate-pulse"></i>
+            <span class="font-amiri text-2xl font-bold tracking-wide text-rose-200 glow-pink">حكاية يوسف & دينا</span>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <button id="music-btn" onclick="toggleMusicManual()" class="px-4 py-2 rounded-full glass-pink text-rose-200 hover:text-white hover:bg-rose-600/50 transition duration-300 flex items-center gap-2 text-sm shadow-md">
+                <i id="music-icon" class="fa-solid fa-compact-disc text-amber-400"></i>
+                <span id="music-text">تشغيل/إيقاف الأغنية 🎵</span>
+            </button>
+
+            <!-- EDIT BUTTON -->
+            <button id="header-edit-btn" onclick="scrollToSetup()" class="px-4 py-2 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white transition duration-300 text-sm font-medium flex items-center gap-2 shadow-lg shadow-rose-900/40">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>لوحة إعداد الصور والأغنية</span>
+            </button>
+
+            <!-- UNLOCK BUTTON -->
+            <button id="header-unlock-btn" onclick="requestUnlockModal()" class="hidden px-4 py-2 rounded-full bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white transition duration-300 text-sm font-medium flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-key"></i>
+                <span>إلغاء القفل للتعديل</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="relative z-10 max-w-6xl mx-auto px-4 py-8 space-y-16">
+
+        <section class="text-center space-y-6 pt-4">
+            <div id="locked-status-banner" class="hidden inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold">
+                <i class="fa-solid fa-lock"></i>
+                <span>وضع العرض مُفعّل (ممنوع التعديل لحماية الذكريات)</span>
+            </div>
+
+            <div class="inline-block px-4 py-1.5 rounded-full glass-pink text-rose-300 text-sm font-medium border border-rose-500/40">
+                ✨ حكاية عشق تتجدد في كل ثانية
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold font-amiri tracking-wide leading-tight">
+                <span id="display-name1" class="gradient-text glow-pink">يوسف</span>
+                <span class="inline-block mx-3 text-rose-500 animate-bounce text-3xl md:text-5xl">❤️</span>
+                <span id="display-name2" class="gradient-text glow-pink">دينا</span>
+            </h1>
+
+            <p id="display-main-quote" class="text-lg md:text-2xl text-rose-100/90 font-amiri italic max-w-3xl mx-auto leading-relaxed px-4">
+                "أنتِ النعمة الجميلة التي أعدت بها اكتشاف كل روائع الدنيا يا دينا."
+            </p>
+
+            <div class="pt-2 flex justify-center gap-4 flex-wrap">
+                <button onclick="triggerConfetti()" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-rose-600 to-pink-600 hover:scale-105 text-white font-bold shadow-xl shadow-rose-900/50 transition duration-300 flex items-center gap-2 text-base">
+                    <i class="fa-solid fa-heart-circle-bolt"></i>
+                    <span>احتفل بحبنا ✨</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="glass-card rounded-3xl p-6 md:p-10 border border-amber-500/40 shadow-2xl relative overflow-hidden space-y-6">
+            <div class="absolute -top-16 -left-16 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold">
+                    <i class="fa-solid fa-compact-disc animate-spin"></i>
+                    <span>مشغل الأغاني الخاص بيوسف ودينا</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-amiri font-bold text-amber-200" id="audio-title-display">أغنيتنا المفضلة 🎶</h2>
+            </div>
+
+            <div class="max-w-2xl mx-auto glass-pink rounded-2xl p-6 border border-rose-500/30 flex flex-col items-center justify-center space-y-4 text-center">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center text-white shadow-xl shadow-rose-600/50 animate-pulse">
+                    <i id="main-play-status-icon" class="fa-solid fa-music text-3xl"></i>
+                </div>
+
+                <div class="space-y-1">
+                    <h4 id="song-filename-label" class="text-xl font-amiri font-bold text-amber-200">الأغنية تعمل الآن</h4>
+                    <p class="text-xs text-rose-300/80">تعزف نغمات الحب المخصصة لكم</p>
+                </div>
+
+                <div class="flex items-center gap-4 pt-2 flex-wrap justify-center">
+                    <button onclick="toggleMusicManual()" class="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow-lg flex items-center gap-2 transition">
+                        <i id="btn-play-icon" class="fa-solid fa-pause"></i>
+                        <span id="btn-play-text">إيقاف / تشغيل الموسيقى</span>
+                    </button>
+                    
+                    <label id="song-upload-label" class="px-5 py-3 rounded-full bg-amber-600/40 hover:bg-amber-600/60 border border-amber-500/50 text-amber-100 font-bold text-sm cursor-pointer shadow-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-audio"></i>
+                        <span>اختر أغنية من الهاتف 📱</span>
+                        <input type="file" id="custom-audio-input" accept="audio/*" class="hidden" onchange="handleCustomAudioUpload(event)">
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card rounded-3xl p-6 md:p-10 border border-rose-500/30 text-center relative overflow-hidden">
+            <h2 class="text-2xl md:text-3xl font-amiri font-bold text-rose-200 mb-2">
+                عداد الأيام السعيدة في رحلتنا
+            </h2>
+            <p class="text-sm text-rose-300/80 mb-8 font-mono" id="display-start-date">
+                بداية حكايتنا: 22 / 04 / 2026
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+                <div class="glass-pink p-5 rounded-2xl border border-rose-500/40 flex flex-col items-center">
+                    <span id="cnt-days" class="text-4xl md:text-6xl font-extrabold text-white font-mono glow-pink">0</span>
+                    <span class="text-xs md:text-sm text-rose-200 font-medium mt-2">يوم</span>
+                </div>
+                <div class="glass-pink p-5 rounded-2xl border border-rose-500/40 flex flex-col items-center">
+                    <span id="cnt-hours" class="text-4xl md:text-6xl font-extrabold text-white font-mono glow-pink">0</span>
+                    <span class="text-xs md:text-sm text-rose-200 font-medium mt-2">ساعة</span>
+                </div>
+                <div class="glass-pink p-5 rounded-2xl border border-rose-500/40 flex flex-col items-center">
+                    <span id="cnt-minutes" class="text-4xl md:text-6xl font-extrabold text-white font-mono glow-pink">0</span>
+                    <span class="text-xs md:text-sm text-rose-200 font-medium mt-2">دقيقة</span>
+                </div>
+                <div class="glass-pink p-5 rounded-2xl border border-rose-500/40 flex flex-col items-center">
+                    <span id="cnt-seconds" class="text-4xl md:text-6xl font-extrabold text-amber-300 font-mono animate-pulse">0</span>
+                    <span class="text-xs md:text-sm text-rose-200 font-medium mt-2">ثانية</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="setup-section" class="glass-card rounded-3xl p-6 md:p-10 border border-rose-500/40 space-y-6">
+            <div class="border-b border-rose-900/50 pb-4 flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-amiri font-bold text-rose-200 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-rose-500"></i>
+                        <span>لوحة التحكم وتجهيز صور الهدية</span>
+                    </h2>
+                    <p class="text-sm text-rose-300/70 mt-1">ارفع صوركما واكتب العبارة لكل صورة قبل القفل وتنزيل الملف</p>
+                </div>
+                <span id="photo-count-badge" class="px-3 py-1 rounded-full bg-rose-600/40 border border-rose-400/30 text-rose-200 text-xs font-bold">
+                    عدد الصور المرفوعة: 0
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-rose-300 mb-2">اسمك</label>
+                    <input type="text" id="input-name1" placeholder="يوسف" class="w-full bg-rose-950/60 border border-rose-500/40 rounded-xl p-3 text-white placeholder-rose-500/40 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-300 mb-2">اسم حبيبتك</label>
+                    <input type="text" id="input-name2" placeholder="دينا" class="w-full bg-rose-950/60 border border-rose-500/40 rounded-xl p-3 text-white placeholder-rose-500/40 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-300 mb-2">تاريخ بداية العلاقة</label>
+                    <input type="date" id="input-date" value="2026-04-22" class="w-full bg-rose-950/60 border border-rose-500/40 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-300 mb-2">كلمة السر</label>
+                    <input type="password" id="input-passcode" placeholder="love you dina" class="w-full bg-rose-950/60 border border-rose-500/40 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="space-y-4 pt-4 border-t border-rose-900/40">
+                <label class="block text-xs font-semibold text-rose-300">رفع صورة جديدة ليوسف ودينا من الهاتف أو الكمبيوتر</label>
+                
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-8 space-y-3">
+                        <div class="relative border-2 border-dashed border-rose-500/50 hover:border-rose-400 bg-rose-950/30 rounded-2xl p-6 text-center transition cursor-pointer">
+                            <input type="file" id="photo-upload-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewAndCompressImage(event)">
+                            <div class="space-y-2 pointer-events-none">
+                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-rose-400"></i>
+                                <p id="upload-status-text" class="text-sm font-medium text-rose-200">اضغط هنا أو اسحب صورتكما لوضعها هنا</p>
+                            </div>
+                        </div>
+                        <input type="text" id="photo-caption-input" placeholder="اكتب العبارة الرومانسية المخصصة لهذه الصورة..." class="w-full bg-rose-950/60 border border-rose-500/40 rounded-xl p-3 text-white placeholder-rose-500/40 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                    </div>
+
+                    <div class="md:col-span-4 flex flex-col items-center justify-center">
+                        <div class="w-full h-40 rounded-2xl bg-rose-950/40 border border-rose-500/30 overflow-hidden flex items-center justify-center relative">
+                            <img id="image-preview" class="w-full h-full object-cover hidden" alt="معاينة الصورة">
+                            <span id="preview-placeholder" class="text-xs text-rose-400/50">معاينة الصورة المرفوعة ستظهر هنا</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <button onclick="saveMainSettings()" class="flex-1 min-w-[200px] py-3 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 rounded-xl font-bold text-white shadow-lg transition duration-300">
+                        حفظ التعديلات 💾
+                    </button>
+                    <button onclick="addNewPhotoCard()" class="flex-1 min-w-[200px] py-3 bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 rounded-xl font-bold text-white shadow-lg transition duration-300">
+                        إضافة الصورة إلى المعرض ❤
+                    </button>
+                </div>
+
+                <!-- EXPORT FILE & LOCK OPTIONS -->
+                <div class="pt-6 border-t border-rose-900/50 space-y-4">
+                    <div class="p-5 rounded-2xl bg-rose-950/80 border border-amber-500/40 space-y-4">
+                        <h4 class="text-lg font-amiri font-bold text-amber-300 flex items-center gap-2">
+                            <i class="fa-solid fa-download text-amber-400"></i>
+                            <span>خيارات التثبيت وتنزيل الملف على الهاتف:</span>
+                        </h4>
+                        <p class="text-xs text-rose-200/90 leading-relaxed">
+                            يمكنك تنزيل الموقع كملف قائم بذاته ومحمي بكلمة سر. عند فتحه من قبل أي شخص على أي جهاز ستطالبه بكلمة السر <b>love you dina</b> ثم تفتح ذكرياتكم وأغنيتكم مباشرة!
+                        </p>
+
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <button onclick="exportStandaloneHTML()" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl font-bold text-white shadow-xl transition flex items-center justify-center gap-2 text-sm border border-emerald-400/30">
+                                <i class="fa-solid fa-file-arrow-down text-lg"></i>
+                                <span>تنزيل الموقع كملف جاهز ومحمي 📥</span>
+                            </button>
+
+                            <button onclick="lockAndFreezeSite()" class="flex-1 py-3.5 bg-gradient-to-r from-purple-700 via-rose-700 to-pink-700 hover:from-purple-600 hover:to-pink-600 rounded-xl font-bold text-white shadow-xl transition flex items-center justify-center gap-2 text-sm border border-rose-400/30">
+                                <i class="fa-solid fa-lock"></i>
+                                <span>قفل التعديلات ومنع الحذف 🔒</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl md:text-4xl font-amiri font-bold text-rose-200">معرض ألبوم صورنا الخاص</h2>
+                <p class="text-rose-300/80 text-sm">يحتوي فقط على الصور التي قمت برفعها بنفسك</p>
+            </div>
+
+            <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically Rendered Photos -->
+            </div>
+        </section>
+
+        <section class="space-y-8">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl md:text-4xl font-amiri font-bold text-rose-200">رسائل الحب الشاعرية</h2>
+                <p class="text-rose-300/80 text-sm">كلمات نابعة من قلب يوسف لتصل إلى قلب دينا</p>
+            </div>
+
+            <div class="glass-card rounded-3xl p-6 md:p-8 border border-amber-500/30 text-center space-y-4 max-w-2xl mx-auto relative overflow-hidden">
+                <div class="inline-block p-3 rounded-full bg-amber-500/10 text-amber-300 mb-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-amiri font-bold text-amber-200">مولد رسائل الحب العشوائية</h3>
+                <p id="random-love-message" class="font-amiri text-lg md:text-xl text-rose-100 leading-relaxed italic min-h-[80px] flex items-center justify-center">
+                    "اضغط على الزر أدناه لاستخراج رسالة رومانسية جميلة لحبيبتك دينا..."
+                </p>
+                <button onclick="generateRandomMessage()" class="px-6 py-2.5 rounded-full bg-amber-600/30 hover:bg-amber-600/60 border border-amber-500/40 text-amber-100 text-sm transition duration-300">
+                    استخرج رسالة جديدة 💌
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="preset-messages"></div>
+        </section>
+
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="max-w-4xl w-full glass-card rounded-3xl overflow-hidden relative border border-rose-500/30">
+            <button onclick="closeLightbox()" class="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-black/60 text-white hover:bg-rose-600 transition flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-2/3 max-h-[75vh] bg-black/80 flex items-center justify-center">
+                    <img id="lightbox-img" src="" alt="صورة مكبرة" class="max-h-[75vh] w-auto object-contain">
+                </div>
+                <div class="md:w-1/3 p-6 flex flex-col justify-center space-y-4">
+                    <h3 class="text-xl font-amiri font-bold text-rose-300">ذكرى تجمعنا ❤️</h3>
+                    <p id="lightbox-caption" class="font-amiri text-rose-100/90 italic text-base leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="relative z-10 border-t border-rose-900/40 py-8 text-center text-rose-300/60 text-sm mt-16 glass-card">
+        <p>صنع بكل حب ليجمع بين يوسف ودينا إلى الأبد ❤</p>
+        <p id="footer-text" class="text-xs mt-2 text-rose-400/50">يوسف & دينا - حكاية عشق لا تنتهي</p>
+    </footer>
+
+    <script>
+        let appData = {
+            passcode: "love you dina",
+            name1: "يوسف",
+            name2: "دينا",
+            startDate: "2026-04-22",
+            quote: "أنتِ النعمة الجميلة التي أعدت بها اكتشاف كل روائع الدنيا يا دينا.",
+            photos: [],
+            customAudioName: "",
+            isLocked: false
+        };
+
+        const loveQuotesPool = [
+            "يا دينا، لو كان الحب يُقاس بالكلمات، لأفنيتُ أقلام العالم أجمع لأعبر لكِ عن جزء بسيط مما يحمله قلبي.",
+            "أحبكِ يا دينا ليس لما أنتِ عليه فقط، بل لما أكون عليه عندما أكون بجانبكِ.",
+            "وجودكِ بجانبي يا دينا يجعل العالم أدفأ، وأجمل، وأكثر سلاماً.",
+            "أنتِ لستِ خياري، أنتِ اختياري الذي أكرره في كل صباح بقلب عاشق يا يوسف.",
+            "سألوني عن السعادة، فابتسمت وذكرت اسم دينا أمام الجميع.",
+            "في عينيكِ وطن، وفي قربكِ أمان، وفي حبكِ أكتفي عن العالم أجمع يا حبيبتي."
+        ];
+
+        let compressedBase64Image = "";
+        let audioPlayer = null;
+        let titleClickCount = 0;
+        let db = null;
+
+        // INDEXEDDB SETUP FOR PERSISTENT AUDIO STORAGE
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('YoussefDinaLoveDB', 1);
+                request.onupgradeneeded = (e) => {
+                    const dbInstance = e.target.result;
+                    if (!dbInstance.objectStoreNames.contains('audioStore')) {
+                        dbInstance.createObjectStore('audioStore');
+                    }
+                };
+                request.onsuccess = (e) => {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        function saveAudioToIDB(audioBlob, fileName) {
+            if (!db) return;
+            const tx = db.transaction('audioStore', 'readwrite');
+            const store = tx.objectStore('audioStore');
+            store.put(audioBlob, 'currentSong');
+            store.put(fileName, 'songName');
+        }
+
+        function getAudioFromIDB() {
+            return new Promise((resolve) => {
+                if (!db) return resolve(null);
+                const tx = db.transaction('audioStore', 'readonly');
+                const store = tx.objectStore('audioStore');
+                const req = store.get('currentSong');
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve(null);
+            });
+        }
+
+        window.addEventListener('load', async () => {
+            audioPlayer = document.getElementById('bg-music');
+            
+            try {
+                await initDB();
+                const savedAudioBlob = await getAudioFromIDB();
+                if (savedAudioBlob) {
+                    const audioUrl = URL.createObjectURL(savedAudioBlob);
+                    audioPlayer.src = audioUrl;
+                }
+            } catch (e) {
+                console.error("IDB Init failed:", e);
+            }
+
+            loadFromLocalStorage();
+
+            if (window.location.hash === '#view' || window.location.search.includes('mode=view')) {
+                appData.isLocked = true;
+            }
+
+            initFloatingHearts();
+            updateUI();
+            startLoveCounter();
+            renderGallery();
+            renderPresetMessages();
+        });
+
+        function playMusicNow() {
+            if (!audioPlayer) return;
+            audioPlayer.volume = 0.9;
+            audioPlayer.play().then(() => {
+                updateMusicStatusUI(true);
+            }).catch(err => {
+                console.log("Audio autoplay waiting for user unlock:", err);
+                updateMusicStatusUI(false);
+            });
+        }
+
+        function toggleMusicManual() {
+            if (!audioPlayer) return;
+            if (audioPlayer.paused) {
+                audioPlayer.play().then(() => {
+                    updateMusicStatusUI(true);
+                }).catch(e => console.error(e));
+            } else {
+                audioPlayer.pause();
+                updateMusicStatusUI(false);
+            }
+        }
+
+        function updateMusicStatusUI(isPlaying) {
+            const musicIcon = document.getElementById('music-icon');
+            const musicText = document.getElementById('music-text');
+            const mainIcon = document.getElementById('main-play-status-icon');
+            const btnIcon = document.getElementById('btn-play-icon');
+
+            if (isPlaying) {
+                if(musicIcon) musicIcon.className = "fa-solid fa-compact-disc text-amber-400 animate-spin";
+                if(musicText) musicText.innerText = "الأغنية تشغل الآن ♪";
+                if(mainIcon) mainIcon.className = "fa-solid fa-music text-3xl animate-bounce";
+                if(btnIcon) btnIcon.className = "fa-solid fa-pause";
+            } else {
+                if(musicIcon) musicIcon.className = "fa-solid fa-compact-disc text-rose-400/50";
+                if(musicText) musicText.innerText = "الأغنية متوقفة 🎵";
+                if(mainIcon) mainIcon.className = "fa-solid fa-play text-3xl";
+                if(btnIcon) btnIcon.className = "fa-solid fa-play";
+            }
+        }
+
+        function handleCustomAudioUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            appData.customAudioName = file.name;
+            saveToLocalStorage();
+            saveAudioToIDB(file, file.name);
+
+            const fileUrl = URL.createObjectURL(file);
+            audioPlayer.src = fileUrl;
+            
+            document.getElementById('song-filename-label').innerText = file.name;
+            playMusicNow();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'تمت إضافة أُغنيتكم بنجاح 🎶',
+                text: `ستعمل أغنية (${file.name}) فور فتح القفل بكلمة السر!`,
+                background: '#120008',
+                color: '#fff'
+            });
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('love_website_youssef_dina_v7');
+            if (saved) {
+                try {
+                    appData = { ...appData, ...JSON.parse(saved) };
+                    if (appData.customAudioName) {
+                        const label = document.getElementById('song-filename-label');
+                        if (label) label.innerText = appData.customAudioName;
+                    }
+                } catch(e) {
+                    console.error("Error loading localStorage data", e);
+                }
+            }
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('love_website_youssef_dina_v7', JSON.stringify(appData));
+            } catch (e) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'تنبيه',
+                    text: 'وصل التخزين للحد الأقصى. يفضل مسح بعض الصور.',
+                    background: '#120008',
+                    color: '#fff'
+                });
+            }
+        }
+
+        function normalizeString(str) {
+            return str ? str.toLowerCase().replace(/\s+/g, ' ').trim() : '';
+        }
+
+        function handleUnlock(event) {
+            event.preventDefault();
+            const inputPassRaw = document.getElementById('passcode-input').value;
+            const inputPassNormalized = normalizeString(inputPassRaw);
+            const targetPassNormalized = normalizeString(appData.passcode);
+
+            const errorMsg = document.getElementById('lock-error-msg');
+            const card = document.getElementById('lock-card');
+            const lockScreen = document.getElementById('lock-screen');
+            const lockIcon = document.getElementById('lock-icon');
+
+            if (inputPassNormalized === targetPassNormalized || inputPassNormalized === "love you dina") {
+                errorMsg.classList.add('hidden');
+                lockIcon.className = "fa-solid fa-lock-open text-3xl";
+                triggerConfetti();
+
+                playMusicNow();
+
+                lockScreen.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    lockScreen.classList.add('hidden');
+                }, 700);
+            } else {
+                errorMsg.classList.remove('hidden');
+                card.classList.remove('shake');
+                void card.offsetWidth;
+                card.classList.add('shake');
+            }
+        }
+
+        function togglePassVisibility() {
+            const input = document.getElementById('passcode-input');
+            const icon = document.getElementById('pass-eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function lockAndFreezeSite() {
+            Swal.fire({
+                title: 'قفل التعديلات وتثبيت الذكريات؟',
+                text: "لن يتمكن أي شخص من تعديل أو مسح أي صور بعد الآن بدون كلمة السر.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'نعم، اقفل التعديل',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#7e22ce',
+                background: '#120008',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    appData.isLocked = true;
+                    saveToLocalStorage();
+                    updateUI();
+                    renderGallery();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم قفل الموقع بنجاح 🔒',
+                        text: 'الموقع الآن في وضع العرض الجميل والآمن!',
+                        background: '#120008',
+                        color: '#fff'
+                    });
+                }
+            });
+        }
+
+        function requestUnlockModal() {
+            Swal.fire({
+                title: 'إلغاء قفل التعديلات',
+                text: 'أدخل كلمة السر الخاصة بكما لإعادة إظهار لوحة التحكم:',
+                input: 'password',
+                showCancelButton: true,
+                confirmButtonText: 'فتح التعديل',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#e11d48',
+                background: '#120008',
+                color: '#fff'
+            }).then((res) => {
+                if (res.value && (normalizeString(res.value) === normalizeString(appData.passcode) || normalizeString(res.value) === "love you dina")) {
+                    appData.isLocked = false;
+                    saveToLocalStorage();
+                    updateUI();
+                    renderGallery();
+                    Swal.fire({ 
+                        icon: 'success', 
+                        title: 'تم إظهار لوحة التحكم بنجاح! ❤️', 
+                        background: '#120008', 
+                        color: '#fff' 
+                    });
+                } else if(res.value) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'كلمة السر غير صحيحة',
+                        text: 'كلمة السر هي: love you dina',
+                        background: '#120008',
+                        color: '#fff'
+                    });
+                }
+            });
+        }
+
+        function exportStandaloneHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `love_story_youssef_and_dina.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'تم تنزيل ملف الموقع بنجاح! 📥',
+                html: `
+                    <p class="text-sm text-rose-200">تم حفظ الملف باسم <b>love_story_youssef_and_dina.html</b></p>
+                    <p class="text-xs text-amber-300 mt-2">عند فتح هذا الملف على أي هاتف سيطلب كلمة السر (<b>love you dina</b>) ويعرض صوركم وأغنيتكم مباشرة!</p>
+                `,
+                background: '#120008',
+                color: '#fff'
+            });
+        }
+
+        function handleTitleClick() {
+            titleClickCount++;
+            if (titleClickCount >= 5) {
+                titleClickCount = 0;
+                requestUnlockModal();
+            }
+        }
+
+        function initFloatingHearts() {
+            const container = document.getElementById('hearts-bg');
+            setInterval(() => {
+                const heart = document.createElement('i');
+                heart.className = 'fa-solid fa-heart floating-heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.fontSize = (Math.random() * 16 + 10) + 'px';
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }, 500);
+        }
+
+        function startLoveCounter() {
+            function update() {
+                const start = new Date(appData.startDate).getTime();
+                const now = new Date().getTime();
+                const diff = now - start;
+
+                if (isNaN(start) || diff < 0) {
+                    document.getElementById('cnt-days').innerText = "0";
+                    document.getElementById('cnt-hours').innerText = "0";
+                    document.getElementById('cnt-minutes').innerText = "0";
+                    document.getElementById('cnt-seconds').innerText = "0";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cnt-days').innerText = days;
+                document.getElementById('cnt-hours').innerText = hours;
+                document.getElementById('cnt-minutes').innerText = minutes;
+                document.getElementById('cnt-seconds').innerText = seconds;
+            }
+
+            update();
+            setInterval(update, 1000);
+        }
+
+        function updateUI() {
+            document.getElementById('display-name1').innerText = appData.name1 || "يوسف";
+            document.getElementById('display-name2').innerText = appData.name2 || "دينا";
+            document.getElementById('display-main-quote').innerText = `"${appData.quote}"`;
+            document.getElementById('footer-text').innerText = `${appData.name1} & ${appData.name2} - حكاية عشق لا تنتهي`;
+            
+            document.getElementById('input-name1').value = appData.name1;
+            document.getElementById('input-name2').value = appData.name2;
+            document.getElementById('input-date').value = appData.startDate;
+            document.getElementById('input-passcode').value = appData.passcode;
+
+            const dateObj = new Date(appData.startDate);
+            if (!isNaN(dateObj)) {
+                const formatted = dateObj.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('display-start-date').innerText = `بداية حكايتنا: ${formatted}`;
+            }
+
+            document.getElementById('photo-count-badge').innerText = `عدد الصور المرفوعة: ${appData.photos.length}`;
+
+            const setupSection = document.getElementById('setup-section');
+            const headerEditBtn = document.getElementById('header-edit-btn');
+            const headerUnlockBtn = document.getElementById('header-unlock-btn');
+            const songUploadLabel = document.getElementById('song-upload-label');
+            const lockedBanner = document.getElementById('locked-status-banner');
+
+            if (appData.isLocked) {
+                if(setupSection) setupSection.classList.add('hidden');
+                if(headerEditBtn) headerEditBtn.classList.add('hidden');
+                if(headerUnlockBtn) headerUnlockBtn.classList.remove('hidden');
+                if(songUploadLabel) songUploadLabel.classList.add('hidden');
+                if(lockedBanner) lockedBanner.classList.remove('hidden');
+            } else {
+                if(setupSection) setupSection.classList.remove('hidden');
+                if(headerEditBtn) headerEditBtn.classList.remove('hidden');
+                if(headerUnlockBtn) headerUnlockBtn.classList.add('hidden');
+                if(songUploadLabel) songUploadLabel.classList.remove('hidden');
+                if(lockedBanner) lockedBanner.classList.add('hidden');
+            }
+        }
+
+        function saveMainSettings() {
+            const n1 = document.getElementById('input-name1').value.trim();
+            const n2 = document.getElementById('input-name2').value.trim();
+            const date = document.getElementById('input-date').value;
+            const newPass = document.getElementById('input-passcode').value.trim();
+
+            if (n1) appData.name1 = n1;
+            if (n2) appData.name2 = n2;
+            if (date) appData.startDate = date;
+            if (newPass) appData.passcode = newPass;
+
+            saveToLocalStorage();
+            updateUI();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'تم حفظ البيانات بنجاح ❤️',
+                timer: 1500,
+                showConfirmButton: false,
+                background: '#120008',
+                color: '#fff'
+            });
+        }
+
+        function previewAndCompressImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('upload-status-text').innerText = "جاري معالجة الصورة وتحسين حجمها...";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    const maxDim = 900;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxDim) {
+                            height *= maxDim / width;
+                            width = maxDim;
+                        }
+                    } else {
+                        if (height > maxDim) {
+                            width *= maxDim / height;
+                            height = maxDim;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    compressedBase64Image = canvas.toDataURL('image/jpeg', 0.72);
+
+                    const imgElement = document.getElementById('image-preview');
+                    imgElement.src = compressedBase64Image;
+                    imgElement.classList.remove('hidden');
+                    document.getElementById('preview-placeholder').classList.add('hidden');
+                    document.getElementById('upload-status-text').innerText = `جاهزة للإضافة: ${file.name}`;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addNewPhotoCard() {
+            const caption = document.getElementById('photo-caption-input').value.trim();
+
+            if (!compressedBase64Image) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'تنبيه',
+                    text: 'يرجى اختيار صورة أولاً من جهازك.',
+                    background: '#120008',
+                    color: '#fff',
+                    confirmButtonColor: '#e11d48'
+                });
+                return;
+            }
+
+            appData.photos.unshift({
+                id: Date.now(),
+                url: compressedBase64Image,
+                caption: caption || "لحظة غرامية محفورة في ذاكرتنا يا دينا ❤️"
+            });
+
+            saveToLocalStorage();
+            renderGallery();
+            updateUI();
+
+            compressedBase64Image = "";
+            document.getElementById('photo-upload-input').value = "";
+            document.getElementById('photo-caption-input').value = "";
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('preview-placeholder').classList.remove('hidden');
+            document.getElementById('upload-status-text').innerText = "اضغط هنا أو اسحب صورتكما لوضعها هنا";
+
+            Swal.fire({
+                icon: 'success',
+                title: 'تمت إضافة الصورة إلى المعرض! 📸',
+                text: `إجمالي الصور الآن: ${appData.photos.length}`,
+                timer: 1700,
+                showConfirmButton: false,
+                background: '#120008',
+                color: '#fff'
+            });
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            if (!appData.photos || appData.photos.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center p-12 glass-card rounded-3xl border border-rose-500/30 space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto text-rose-400">
+                            <i class="fa-solid fa-heart-circle-plus text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-amiri font-bold text-rose-200">المعرض فارغ حالياً</h3>
+                        <p class="text-rose-300/80 text-sm max-w-md mx-auto">
+                            لم تقم برفع صور بعد. استخدم لوحة التحكم المخصصة لرفع صور يوسف ودينا بسهولة.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            appData.photos.forEach((photo, index) => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl overflow-hidden border border-rose-500/20 group hover:border-rose-500/60 transition duration-500 flex flex-col";
+                
+                const deleteBtnHtml = appData.isLocked ? '' : `
+                    <button onclick="event.stopPropagation(); deletePhoto(${index})" class="absolute top-3 left-3 w-8 h-8 rounded-full bg-red-600/80 hover:bg-red-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition" title="حذف الصورة">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                `;
+
+                card.innerHTML = `
+                    <div class="relative h-64 bg-black/40 overflow-hidden cursor-pointer" onclick="openLightbox('${photo.url}', \`${photo.caption}\`)">
+                        <img src="${photo.url}" alt="Memory" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <span class="p-2 rounded-full bg-rose-600/80 text-white text-xs px-3">تكبير <i class="fa-solid fa-expand mr-1"></i></span>
+                        </div>
+                        ${deleteBtnHtml}
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <p class="font-amiri text-rose-100 italic text-center text-base leading-relaxed">
+                            "${photo.caption}"
+                        </p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function deletePhoto(index) {
+            Swal.fire({
+                title: 'هل تريد حذف هذه الصورة؟',
+                text: "لن تتمكن من استعادتها بعد الحذف",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'احذف',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#e11d48',
+                background: '#120008',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    appData.photos.splice(index, 1);
+                    saveToLocalStorage();
+                    renderGallery();
+                    updateUI();
+                }
+            });
+        }
+
+        function openLightbox(url, caption) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox-caption').innerText = caption;
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+
+        function renderPresetMessages() {
+            const container = document.getElementById('preset-messages');
+            container.innerHTML = '';
+
+            loveQuotesPool.slice(0, 4).forEach((msg) => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-6 rounded-2xl border border-rose-500/20 relative";
+                card.innerHTML = `
+                    <i class="fa-solid fa-quote-right text-3xl text-rose-500/20 absolute top-4 left-4"></i>
+                    <p class="font-amiri text-lg text-rose-100 leading-relaxed mb-4">${msg}</p>
+                    <div class="text-xs text-rose-400 font-medium">❤️ نبض القلب</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function generateRandomMessage() {
+            const randomIndex = Math.floor(Math.random() * loveQuotesPool.length);
+            document.getElementById('random-love-message').innerText = `"${loveQuotesPool[randomIndex]}"`;
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 80,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#f43f5e', '#fb7185', '#fde047', '#ffffff']
+            });
+        }
+
+        function scrollToSetup() {
+            const setupSec = document.getElementById('setup-section');
+            if (setupSec) setupSec.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
